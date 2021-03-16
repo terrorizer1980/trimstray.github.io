@@ -12,7 +12,7 @@ new: false
 
 W dobie narzędzi do bardzo szybkiego i sprawnego tworzenia środowisk sposób taki prawdopodobnie nigdy nie będzie potrzebny. Jednak w mojej przygodzie z systemami GNU/Linux kilka dwa razy uratował mi życie.
 
-Narzędzie to pozwala na instalację systemu z poziomu i w miejsce już uruchomionego innego systemu operacyjnego na tym samym dysku. Repozytorium projektu znajduje się [tutaj](https://github.com/trimstray/reload.sh).
+Jakiś czas temu napisałem proste narzędzie, które pozwala na instalację systemu z poziomu i w miejsce już uruchomionego systemu operacyjnego na tym samym dysku. Repozytorium projektu znajduje się [tutaj](https://github.com/trimstray/reload.sh).
 
 Co skrypt robi i wypluwa na ekran, pokazuje poniższy zrzut:
 
@@ -43,7 +43,7 @@ Tworzę katalog roboczy i pobieram system za pomocą wyżej opisanego narzędzia
 
 ```bash
 _working_directory="/mnt/system"
-mkdir $_working_directory
+mkdir $_working_directory && cd "$_"
 debootstrap --verbose --arch amd64 {wheezy|jessie} . http://ftp.pl.debian.org/debian
 ```
 
@@ -127,18 +127,18 @@ Sprawdzam jeszcze, czy główne pliki konfiguracyjne (tj. `/etc/fstab`, `/etc/ne
 
 ### Czynności poinstalacyjne
 
-Po wykonaniu całej procedury odmontowuję katalogi **proc**, **sys**, **dev** i **dev/pts**:
+Po wykonaniu całej procedury należy odmontować katalogi **proc**, **sys**, **dev** i **dev/pts**:
 
 ```bash
 cd
 grep $_working_directory /proc/mounts | cut -f2 -d " " | sort -r | xargs umount -n
 ```
 
-Podsystemów tych zamontowanych w `/mnt/system` (nie `/mnt/old_system`, ponieważ te zamontowane w tym katalogu musimy odmontować) nie należy odmontowywać.
+Podsystemów tych zamontowanych w `/mnt/system` (nie `/mnt/old_system`, ponieważ te zamontowane w tym katalogu musimy odmontować) nie należy ruszać.
 
-Teraz ostrożnie, ponieważ znajduję się w środowisku pierwotnego systemu, a ostatnią czynnością do wykonania jest restart systemu. Wychodząc z konsoli superużytkownika np. poleceniem `exit`, stracę możliwość restartu czy wyłączenia maszyny jeśli użytkownik, z którego logowałem się na roota, nie ma do tego przywilejów. Co więcej, stracę także możliwość zalogowania się ponownie na root'a.
+Teraz ostrożnie, ponieważ znajdujemy się w środowisku pierwotnego systemu, a ostatnią czynnością do wykonania jest restart systemu. Wychodząc z konsoli superużytkownika np. poleceniem `exit`, stracę możliwość restartu czy wyłączenia maszyny jeśli użytkownik, z którego logowałem się na konto root, nie ma odpowiednich uprawnień do wykonania takiej operacji. Co więcej, stracę także możliwość zalogowania się ponownie na root'a.
 
-Żadne z dostępnych poleceń tj. `halt`, `shutdown` czy `reboot` nie zadziała. Należy przeładować konfigurację systemu — w tym celu posłużę się **debuggerem jądra** (bez opcji '**b**'):
+Żadne z dostępnych poleceń tj. `halt`, `shutdown` czy `reboot` nie zadziała. Należy jednak przeładować konfigurację systemu — w tym celu posłużę się **debuggerem jądra** (bez opcji '**b**'):
 
 ```bash
 echo 1 > /proc/sys/kernel/sysrq
