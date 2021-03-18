@@ -393,7 +393,8 @@ figure.highlight,
 .highlighter-rouge {
   overflow: auto;
   margin-top: 3px;
-  background: floralwhite;
+  /* background: floralwhite; */
+  background: fixed;
   padding: .0rem .5rem;
   color: var(--highlight-lineno, #c2c6cc);
 }
@@ -857,7 +858,8 @@ table thead th {
   text-decoration: none;
   /* background-color: #fdff9863; */
   /* background-color: mistyrose; */
-  background-color: papayawhip;
+  /* background-color: papayawhip; */
+  background-color: #fff8dc87;
 }
 
 .h-m {
