@@ -4,7 +4,7 @@ title: "Instalacja systemu z poziomu i w miejsce już uruchomionego"
 date: 2018-09-20 01:21:46
 categories: [system]
 tags: [system, linux, reinstall, recovery]
-comments: false
+comments: true
 favorite: false
 toc: true
 new: false

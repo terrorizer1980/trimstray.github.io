@@ -5,7 +5,7 @@ description: "Czym są sygnały, jak poprawnie zamykać procesy i czy w ogóle i
 date: 2017-07-02 19:51:17
 categories: [system]
 tags: [system, kill, kernel, processes, signals]
-comments: false
+comments: true
 favorite: false
 toc: true
 ---
