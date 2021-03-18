@@ -92,14 +92,15 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   text-size-adjust: 100%;
-  font: 400 16.56px/24px -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  font: 400 15.56px/24px -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
   font-family: -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
 
 .container {
   margin-left: 10rem;
   margin-right: auto;
-  max-width: 960px;
+  /* max-width: 960px; */
+  max-width: 840px;
   width: calc(100% - 40px);
   line-height: 1.5em;
   color: #202124;
