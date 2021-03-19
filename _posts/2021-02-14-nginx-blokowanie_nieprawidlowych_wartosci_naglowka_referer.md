@@ -188,7 +188,7 @@ Może to rodzić negatywne konsekwencje w wyniku czego dyrektywa `valid_referers
 Poniżej znajdują się jeszcze inne możliwości blokowania niechcianych refererów. Możemy np. wykorzystać bardziej statyczną konfigurację. Spójrz na poniższy przykład:
 
 ```nginx
-if ($http_referer ~* (seo|referrer|redirect|link=|url=|url?|path=|dku=|click|organic|poker|porn|sex|video|webcam)) {
+if ($http_referer ~* (seo|referrer|redirect|link=|url=|url?|path=|dku=|video|webcam)) {
   return 403;
 }
 ```
