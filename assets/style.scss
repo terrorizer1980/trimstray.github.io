@@ -471,9 +471,9 @@ p.ext {
 }
 
 img {
-  width: 80%;
-  max-width: 100%;
+  width: auto;
   height: auto;
+  max-width: 100%;
   border-style: none;
   vertical-align: middle;
   padding-top: 20px;
@@ -489,6 +489,7 @@ img {
 }
 
 img.index {
+  width: 80%;
   border-style: none;
   padding-bottom: 0px;
   margin-top: 50px;
