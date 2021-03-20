@@ -17,25 +17,25 @@ W tym poście przedstawię, czym jest mechanizm **SNI** a także do czego potrze
 
 ## Czym jest rozszerzenie SNI?
 
-SNI (ang. _Server Name Indication_) jest rozszerzeniem protokołu TLS, które umożliwia klientowi (na przykład przeglądarce) podanie dokładnej nazwy hosta, na początku procesu uzgadniania TLS, z którym klient próbuje się połączyć (wskazuje, z którą nazwą hosta kontaktuje się przeglądarka na początku procesu uzgadniania). Po stronie serwera HTTP pozwala na wielokrotne połączenie przy użyciu tego samego adresu IP i numeru portu, bez konieczności używania wielu adresów IP, dzięki czemu możliwe jest np. używanie wielu certyfikatów na jednym adresie IP.
+SNI (ang. _Server Name Indication_) jest rozszerzeniem protokołu TLS, które umożliwia klientowi (na przykład przeglądarce) podanie dokładnej nazwy hosta, na początku procesu uzgadniania TLS, z którym klient próbuje się połączyć (wskazuje, dla której nazwy hosta jest to uzgadnianie). Po stronie serwera HTTP pozwala na wielokrotne połączenie przy użyciu tego samego adresu IP i numeru portu, bez konieczności używania wielu adresów IP, dzięki czemu możliwe jest np. używanie wielu certyfikatów na jednym adresie IP.
 
 Gdy przeglądarka zestawia połączenie z serwerem, nie wie on, o jaką stronę zostanie poproszony, jednak już w tym momencie musi przedstawić poprawny certyfikat dla domeny. Jak wiesz, na serwerze może znajdować się wiele domen, które mają wspólny adres IP, a każda z nich może mieć własny certyfikat. W takiej sytuacji serwer może nie wiedzieć, który z nich ma zostać zwrócony klientowi, gdy próbuje on bezpiecznie połączyć się z jedną domen. Dzieje się tak, ponieważ uzgadnianie SSL/TLS następuje, zanim klient wskaże (wykorzystując protokół HTTP), z którą witryną się łączy.
 
 Klient dodaje rozszerzenie SNI zawierające nazwę hosta witryny, z którą się łączy, do komunikatu <span class="h-b">ClientHello</span>. Niestety ta wiadomość jest wysyłana w postaci niezaszyfrowanej, ponieważ klient i serwer nie mają w tym momencie wspólnego klucza szyfrowania. Wada tego jest oczywista: szpiegujący, który znajduje się na ścieżce komunikacji, może przechwycić wiadomość <span class="h-b">ClientHello</span> i określić, z którą witryną klient próbuje się połączyć. Dzięki temu może śledzić, które witryny odwiedza użytkownik.
 
-  > Rozwiązaniem tego problemu jest użycie funkcji ESNI, która zapewnia prywatność danych przeglądania użytkownika, poprzez szyfrowanie części wskazującej nazwę serwera (SNI) w uzgadnianiu TLS. Więcej informacji na ten temat znajdziesz w pracy [On the Importance of Encrypted-SNI (ESNI) to Censorship Circumvention]({{ site.url }}/assets/pdf/foci19-paper_chai_0.pdf).
+  > Żądana nazwa hosta (domeny), którą ustala klient podczas połączenia, nie jest szyfrowana. W związku z tym, podsłuchując ruch, można zobaczyć, z którą witryną nawiązywane będzie połączenie. Rozwiązaniem tego problemu jest użycie funkcji ESNI, która zapewnia prywatność danych przeglądania użytkownika, poprzez szyfrowanie części wskazującej nazwę serwera (SNI) w uzgadnianiu TLS. Więcej informacji na ten temat znajdziesz w pracy [On the Importance of Encrypted-SNI (ESNI) to Censorship Circumvention]({{ site.url }}/assets/pdf/foci19-paper_chai_0.pdf) oraz artykule [Encrypt it or lose it: how encrypted SNI works](https://blog.cloudflare.com/encrypted-sni/).
 
-Zobacz poniższy diagram z przykładem komunikacji z rozszerzeniem SNI:
+Zobacz poniższy diagram przedstawiający wykorzystanie tego rozszerzenia w przypadku typowej komunikacji:
 
 <p align="center">
   <img src="/assets/img/posts/sni_tls.jpg">
 </p>
 
-Dzięki temu rozszerzeniu adresy IP mogą być alokowane bardziej efektywnie. W większości przypadków można uruchomić aplikację z obsługą protokołu SSL/TLS bez konieczności zakupu dodatkowego adresu IP.
+Dzięki temu rozszerzeniu adresy IP mogą być alokowane bardziej efektywnie. Oznacza to, że z pojedynczym adresem IP może być skojarzonych wiele certyfikatów, a bez konieczności posiadania dedykowanych adresów IP dla każdego wystąpienia certyfikatu, koszty szybko spadają.  W większości przypadków można uruchomić aplikację z obsługą protokołu SSL/TLS bez konieczności zakupu dodatkowego adresu IP.
 
-Podsumowując, zgodnie z [RFC 6066 - Server Name Indication](https://tools.ietf.org/html/rfc6066#page-6) <sup>[IETF]</sup>, rozszerzenie to pozwala klientowi na wskazanie nazwy hosta, z którym stara się nawiązać połączenie na początku procesu uzgadniania sesji SSL/TLS. Jak zostało powiedziane wyżej — pozwala to serwerowi na przedstawienie wielu certyfikatów na tym samym gnieździe (adresie IP i numerze portu), dzięki czemu możliwe jest korzystanie z tego samego adresu IP przez wiele witryn wykorzystujących protokół HTTPS.
+Podsumowując, zgodnie z [RFC 6066 - Server Name Indication](https://tools.ietf.org/html/rfc6066#page-6) <sup>[IETF]</sup>, rozszerzenie to pozwala klientowi na wskazanie nazwy hosta, z którym stara się nawiązać połączenie na początku procesu uzgadniania sesji SSL/TLS. Jak zostało powiedziane wyżej — pozwala to serwerowi na przedstawienie wielu certyfikatów na tym samym gnieździe (adresie IP i numerze portu), dzięki czemu możliwe jest korzystanie z tego samego adresu IP przez wiele witryn wykorzystujących protokół HTTPS. Wyszukiwanie SNI będzie obsługiwać odpowiedni certyfikat, a nagłówek hosta zdecyduje, jaką domenę (aplikację) będzie obsługiwać.
 
-  > Żądana nazwa hosta (domeny), którą ustala klient podczas połączenia, nie jest szyfrowana. W związku z tym, podsłuchując ruch, można zobaczyć, z którą witryną nawiązywane będzie połączenie.
+Co niezwykle istotne, jeśli klient nie zapewni SNI lub jeśli biblioteka SSL/TLS nie obsługuje rozszerzeń TLS, lub jeśli klient poda nazwę hosta SNI, która nie jest zgodna z żadnym certyfikatem, zostanie wyświetlony pierwszy załadowany certyfikat (np. w NGINX jest to certyfikat podpięty pod adres nasłuchujący z ustawioną dyrektywą `default_server`).
 
 ## Nawiązywanie połączenia
 
@@ -138,8 +138,7 @@ echo | openssl s_client -connect www.example.com:443 2>&1 | openssl x509 -text |
 awk '/X509v3 Subject Alternative Name/ {getline;gsub(/ /, "", $0); print}' | tr -d "DNS:"
 
 # 3)
-echo | openssl s_client -connect www.example.com:443 2>&1 | \
-openssl x509 -noout -text | \
+echo | openssl s_client -connect www.example.com:443 2>&1 | openssl x509 -noout -text | \
 perl -l -0777 -ne '@names=/\bDNS:([^\s,]+)/g; print join("\n", sort @names);'
 ```
 
