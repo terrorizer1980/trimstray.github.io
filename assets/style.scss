@@ -479,14 +479,14 @@ img {
   padding-top: 20px;
   padding-bottom: 20px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  /* margin-left: auto;
+  margin-right: auto; */
   z-index: 1;
   mix-blend-mode: luminosity;
   opacity: 1;
   overflow: hidden;
-  -webkit-filter: contrast(1.25);
-  filter: contrast(1.25);
+  -webkit-filter: contrast(1.12);
+  filter: contrast(1.12);
   image-rendering: crisp-edges;
   image-rendering: -moz-crisp-edges;          /* Firefox */
   image-rendering: -o-crisp-edges;            /* Opera */
