@@ -19,17 +19,15 @@ Celem wymiany kluczy Diffie-Hellman (DHKE) jest uzyskanie przez obie strony komu
 
 Jak już wspomniałem, DH jest używany do generowania publicznego wspólnego sekretu w celu późniejszego wykorzystania symetrycznego klucza prywatnego do faktycznego szyfrowania danych. Dokładny opis działania algorytmu DH znajdziesz w artykule [What is the Diffie–Hellman key exchange and how does it work?](https://www.comparitech.com/blog/information-security/diffie-hellman-key-exchange/).
 
-Co istotne, algorytm ten występuje w dwóch odmianach. Generalnie zasada działania jest taka sama, a różnica między nimi polega głównie na grupie, która jest wybierana do obliczania tajnych kluczy (w której wykonywane są obliczenia). Algorytm ten może być oparty na liczbach pierwszych (DH) i wykorzystuje arytmetykę modularną liczb całkowitych o module wyrażającym się dużą liczbą pierwszą, która wymagana jest do obliczania wspólnego sekretu, albo wykorzystuje kryptografię krzywych eliptycznych (ECDH), której podstawą jest grupa punktów na krzywej eliptycznej.
+Co istotne, algorytm ten występuje w dwóch odmianach. Generalnie zasada działania jest taka sama, a różnica między nimi polega głównie na grupie, która jest wybierana do obliczania tajnych kluczy (na której wykonywane są obliczenia). Algorytm ten może być oparty na liczbach pierwszych (DH) i wykorzystuje arytmetykę modularną liczb całkowitych o module wyrażającym się dużą liczbą pierwszą, która wymagana jest do obliczania wspólnego sekretu, albo wykorzystuje kryptografię krzywych eliptycznych (ECDH), której podstawą jest grupa punktów na krzywej eliptycznej.
 
 Co więcej, w przypadku „zwykłego” algorytmu DH, którego dotyczy opisywany problem, znalezienie takich liczb pierwszych jest naprawdę intensywne obliczeniowo i nie można sobie na nie pozwolić przy każdym połączeniu. Rozwiązaniem jest ich wstępne obliczanie i ustawienie z poziomu serwera HTTP. W przypadku serwera NGINX możemy to zrobić za pomocą dyrektywy `ssl_dhparam`.
 
-  > Ciekawostką jest, że w rzeczywistości parametry te są wysyłane przez sieć publiczną (mogą być dostępne publicznie) przy każdej wymianie kluczy Diffie-Hellman (DH).
-
-Należy także wiedzieć, że w idealnym przypadku Diffie-Hellman powinien być używany w połączeniu z uznaną metodą uwierzytelniania (RSA/ECC), taką jak podpisy cyfrowe, w celu weryfikacji tożsamości.
+  > Ciekawostką jest, że w rzeczywistości parametry te są wysyłane przez sieć publiczną (mogą być dostępne publicznie) przy każdej wymianie kluczy Diffie-Hellman. Należy także wiedzieć, że w idealnym przypadku Diffie-Hellman powinien być używany w połączeniu z uznaną metodą uwierzytelniania (RSA/ECC), taką jak podpisy cyfrowe, w celu weryfikacji tożsamości.
 
 Parametry te określają sposób, w jaki biblioteka OpenSSL wykonuje wymianę kluczy Diffie-Hellman (DH). Z matematycznego punktu widzenia, zawierają one najczęściej liczbę pierwszą <span class="h-b">p</span> i generator <span class="h-b">g</span>. Większe <span class="h-b">p</span> znacznie utrudni znalezienie wspólnego i tajnego klucza <span class="h-b">K</span>, chroniąc przed atakami pasywnymi.
 
-W celu zachowania jakości tych parametrów (a tym samym większej ich siły i bezpieczeństwa) istnieje kilka takich parametrów, które są znormalizowane (patrz: [RFC 5114 – Additional Diffie-Hellman Groups for Use with IETF Standards](https://tools.ietf.org/html/rfc5114) <sup>[IETF]</sup>). Co więcej, zgodnie z [RFC 7919 – Supported Groups Registry](https://tools.ietf.org/html/rfc7919#appendix-A) <sup>[IETF]</sup>, aby uzyskać najlepszą konfigurację zabezpieczeń, należy skorzystać ze znanych, wcześniej zdefiniowanych grup DH (tym samym zapewnić zgodności z normami NIST oraz FIPS). Parametry te są kontrolowane i mogą być bardziej odporne na ataki niż te losowo generowane przez administratora.
+W celu zachowania jakości tych parametrów (a tym samym większej ich siły i bezpieczeństwa) istnieje kilka takich parametrów, które są znormalizowane (patrz: [RFC 5114 – Additional Diffie-Hellman Groups for Use with IETF Standards](https://tools.ietf.org/html/rfc5114) <sup>[IETF]</sup>). Co więcej, zgodnie z [RFC 7919 – Supported Groups Registry](https://tools.ietf.org/html/rfc7919#appendix-A) <sup>[IETF]</sup>, aby uzyskać najlepszą konfigurację zabezpieczeń, wskazane jest wykorzystać znane, wcześniej zdefiniowane grupy DH (tym samym zapewnić zgodności z normami NIST oraz FIPS). Parametry te są kontrolowane i mogą być bardziej odporne na ataki niż te losowo generowane przez administratora.
 
 Przykład wstępnie zdefiniowanych grup:
 
@@ -64,7 +62,7 @@ zAqCkc3OyX3Pjsm1Wn+IpGtNtahR9EGC4caKAH5eZV9q//////////8CAQI=
 -----END DH PARAMETERS-----
 ```
 
-Należy pamiętać, że parametry DH są wykorzystywane tylko w przypadku stosowania szyfrów DH/DHE, np. <span class="h-b">DHE-RSA-AES128-GCM-SHA256</span>.
+Należy też pamiętać, że parametry DH są wykorzystywane tylko w przypadku stosowania szyfrów DH/DHE, np. <span class="h-b">DHE-RSA-AES128-GCM-SHA256</span>.
 
 ## Wyeliminowanie podatności
 

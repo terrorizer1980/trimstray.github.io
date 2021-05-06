@@ -17,7 +17,7 @@ W tym poście przedstawię, czym jest mechanizm **SNI** a także do czego potrze
 
 ## Czym jest rozszerzenie SNI?
 
-SNI (ang. _Server Name Indication_) jest rozszerzeniem protokołu TLS, które umożliwia klientowi (na przykład przeglądarce) podanie dokładnej nazwy hosta, na początku procesu uzgadniania TLS, z którym klient próbuje się połączyć (wskazuje, dla której nazwy hosta jest to uzgadnianie). Po stronie serwera HTTP pozwala na wielokrotne połączenie przy użyciu tego samego adresu IP i numeru portu, bez konieczności używania wielu adresów IP, dzięki czemu możliwe jest np. używanie wielu certyfikatów na jednym adresie IP.
+SNI (ang. _Server Name Indication_) jest rozszerzeniem protokołu TLS, które umożliwia klientowi (na przykład przeglądarce) podanie dokładnej nazwy hosta, na początku procesu uzgadniania TLS, z którym klient próbuje się połączyć (wskazuje, dla której nazwy hosta jest to uzgadnianie). Po stronie serwera HTTP pozwala na wielokrotne połączenie przy użyciu tego samego adresu IP i numeru portu, bez konieczności używania wielu adresów IP, dzięki czemu możliwe jest np. używanie wielu certyfikatów na jednym adresie.
 
 Gdy przeglądarka zestawia połączenie z serwerem, nie wie on, o jaką stronę zostanie poproszony, jednak już w tym momencie musi przedstawić poprawny certyfikat dla domeny. Jak wiesz, na serwerze może znajdować się wiele domen, które mają wspólny adres IP, a każda z nich może mieć własny certyfikat. W takiej sytuacji serwer może nie wiedzieć, który z nich ma zostać zwrócony klientowi, gdy próbuje on bezpiecznie połączyć się z jedną domen. Dzieje się tak, ponieważ uzgadnianie SSL/TLS następuje, zanim klient wskaże (wykorzystując protokół HTTP), z którą witryną się łączy.
 
@@ -31,7 +31,7 @@ Zobacz poniższy diagram przedstawiający wykorzystanie tego rozszerzenia w przy
   <img src="/assets/img/posts/sni_tls.jpg">
 </p>
 
-Dzięki temu rozszerzeniu adresy IP mogą być alokowane bardziej efektywnie. Oznacza to, że z pojedynczym adresem IP może być skojarzonych wiele certyfikatów, a bez konieczności posiadania dedykowanych adresów IP dla każdego wystąpienia certyfikatu, koszty szybko spadają.  W większości przypadków można uruchomić aplikację z obsługą protokołu SSL/TLS bez konieczności zakupu dodatkowego adresu IP.
+Dzięki temu rozszerzeniu adresy IP mogą być alokowane bardziej efektywnie. Oznacza to, że z pojedynczym adresem IP może być skojarzonych wiele certyfikatów, bez konieczności posiadania dedykowanych adresów IP dla każdego wystąpienia certyfikatu, co pozwala znacznie zredukować koszty. W większości przypadków można uruchomić aplikację z obsługą protokołu SSL/TLS bez konieczności zakupu dodatkowego adresu IP.
 
 Podsumowując, zgodnie z [RFC 6066 - Server Name Indication](https://tools.ietf.org/html/rfc6066#page-6) <sup>[IETF]</sup>, rozszerzenie to pozwala klientowi na wskazanie nazwy hosta, z którym stara się nawiązać połączenie na początku procesu uzgadniania sesji SSL/TLS. Jak zostało powiedziane wyżej — pozwala to serwerowi na przedstawienie wielu certyfikatów na tym samym gnieździe (adresie IP i numerze portu), dzięki czemu możliwe jest korzystanie z tego samego adresu IP przez wiele witryn wykorzystujących protokół HTTPS. Wyszukiwanie SNI będzie obsługiwać odpowiedni certyfikat, a nagłówek hosta zdecyduje, jaką domenę (aplikację) będzie obsługiwać.
 
@@ -102,7 +102,7 @@ Używając certyfikatu SAN, możesz hostować wiele witryn obsługujących HTTPS
 
 ## SNI a klient
 
-Jak już powiedziałem na wstępie, SNI to rozszerzenie protokołu TLS, które jest swego rodzaju odpowiednikiem nagłówka <span class="h-b">Host</span> protokołu HTTP. Pozwala serwerowi wybrać odpowiedni certyfikat, który ma zostać przedstawiony klientowi, bez ograniczenia korzystania z oddzielnych adresów IP po stronie serwera (upraszcza to posiadanie wielu certyfikatów).
+Jak już powiedziałem na wstępie, SNI to rozszerzenie protokołu TLS, które jest swego rodzaju odpowiednikiem nagłówka <span class="h-b">Host</span> protokołu HTTP, pozwalające serwerowi wybrać odpowiedni certyfikat, który ma zostać przedstawiony klientowi, bez ograniczenia korzystania z oddzielnych adresów IP po stronie serwera (upraszcza to posiadanie wielu certyfikatów).
 
 Poprawne działanie tego rozszerzenia zależy od:
 
