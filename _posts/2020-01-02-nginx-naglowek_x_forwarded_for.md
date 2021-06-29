@@ -69,7 +69,7 @@ Ale to nie wszystko. Jeśli używasz dodatkowego serwera HTTP działającego mi�
 
 ## Poprawne ustawienie nagłówka XFF
 
-Wartość pola nagłówka <span class="h-b">X-Forwarded-For</span> można ustawić po stronie klienta, co jest idealną sytuacją umożliwiającą jego sfałszowanie. Jednak gdy żądanie sieciowe jest wysyłane za pośrednictwem serwera proxy, serwer proxy modyfikuje pole <span class="h-b">X-Forwarded-For</span>, dodając adres IP klienta (użytkownika). Spowoduje to utworzenie 2 adresów IP oddzielonych przecinkami w polu <span class="h-b">X-Forwarded-For</span>.
+Wartość pola nagłówka <span class="h-b">X-Forwarded-For</span> można ustawić po stronie klienta, co jest idealną sytuacją umożliwiającą jego sfałszowanie. Jednak gdy żądanie sieciowe jest wysyłane za pośrednictwem serwera proxy, serwer proxy modyfikuje pole nagłówka <span class="h-b">X-Forwarded-For</span>, dodając adres IP klienta (użytkownika) - spowoduje to utworzenie 2 adresów IP oddzielonych przecinkami.
 
 Niestety, po stronie serwera NGINX nie jesteśmy w stanie w 100% rozwiązać tego problemu (wszystkie rozwiązania mogą być sfałszowane). Dlatego ważne jest, aby ten nagłówek był poprawnie interpretowany przez serwery aplikacji. Takie postępowanie zapewnia, że ​​aplikacje lub usługi podrzędne mają dokładne informacje na temat ich decyzji, w tym dotyczących dostępu i autoryzacji.
 
@@ -81,7 +81,7 @@ Ciekawą uwagę podsunął [Xiao Yu](https://github.com/xyu) w artykule [Proxies
   </em>
 </p>
 
-W świetle luk w zabezpieczeniach [httpoxy](https://httpoxy.org/) potrzebny jest pełny przykład prawidłowego korzystania z <span class="h-b">HTTP_X_FORWARDED_FOR</span>. Moim zdaniem ze względów bezpieczeństwa serwery proxy muszą być określone przez administratora ręcznie. Dlatego myślę, że najlepszym rozwiązaniem tego problemu jest skonfigurowanie serwerów pośredniczących w celu dodania/zmodyfikowania nagłówka <span class="h-b">X-Forwarded-For</span> ze źródłowym adresem IP klienta i przesłania go do backendu w prawidłowej formie.
+Ze względu na kwestię zaufania, o której wspomina autor w powyższym cytacie, konfiguracja tego nagłówka po stronie serwerów proxy powinna być określona ręcznie przez administratora (głównie ze względów bezpieczeństwa). Jednym z rozwiązań tego problemu jest takie skonfigurowanie serwerów pośredniczących, aby wartość nagłówka <span class="h-b">X-Forwarded-For</span> była ustawiona ze źródłowym adresem IP klienta i przesłana do backendu w prawidłowej formie.
 
 ```nginx
 # Poprawnym ustawieniem nagłówka jest wykonanie dodatkowego działania:
